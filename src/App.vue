@@ -3,11 +3,19 @@
     <h1>长沙市芙蓉区地图编辑器</h1>
     <div class="toolbar">
       <span>公司: {{ companyCount }} | 人才: {{ talentCount }}</span>
+      <button class="export-btn" @click="handleExport">导出数据</button>
     </div>
     <MapEditor 
       :geo-json-data="geoJsonData" 
       :companies="companies"
       @map-click="handleMapClick"
+      @select-company="handleSelectCompany"
+    />
+    <StatisticsPanel
+      :company-count="companyCount"
+      :talent-count="talentCount"
+      :industry-stats="industryStats"
+      :companies="companies"
       @select-company="handleSelectCompany"
     />
     <CompanyDialog
@@ -26,11 +34,12 @@
 <script setup>
 import { ref, onMounted } from 'vue'
 import MapEditor from './components/MapEditor.vue'
+import StatisticsPanel from './components/StatisticsPanel.vue'
 import CompanyDialog from './components/CompanyDialog.vue'
 import { useCompanyData } from './composables/useCompanyData'
 import geoJson from '../public/data/furong-district.json'
 
-const { companies, addCompany, updateCompany, deleteCompany, addTalent, updateTalent, deleteTalent, companyCount, talentCount } = useCompanyData()
+const { companies, addCompany, updateCompany, deleteCompany, addTalent, updateTalent, deleteTalent, companyCount, talentCount, industryStats, exportData } = useCompanyData()
 
 const geoJsonData = ref(null)
 const showDialog = ref(false)
@@ -69,6 +78,17 @@ const handleDeleteTalent = (companyId, talentId) => {
   deleteTalent(companyId, talentId)
 }
 
+const handleExport = () => {
+  const data = exportData()
+  const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' })
+  const url = URL.createObjectURL(blob)
+  const a = document.createElement('a')
+  a.href = url
+  a.download = 'furong-data.json'
+  a.click()
+  URL.revokeObjectURL(url)
+}
+
 onMounted(() => {
   geoJsonData.value = geoJson
 })
@@ -100,5 +120,18 @@ h1 {
   border-bottom: 1px solid #eee;
   font-size: 14px;
   color: #666;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.export-btn {
+  padding: 6px 16px;
+  background: #52c41a;
+  color: #fff;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 13px;
 }
 </style>
