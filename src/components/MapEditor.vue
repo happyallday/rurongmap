@@ -8,9 +8,10 @@
       @click="handleMapClick"
     >
       <l-tile-layer
-        url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+        url="https://webrd0{s}.is.autonavi.com/appmaptile?lang=zh_cn&size=1&scale=1&style=8&x={x}&y={y}&z={z}"
+        :subdomains="[1, 2, 3, 4]"
         layer-type="base"
-        name="OpenStreetMap"
+        name="高德地图"
       ></l-tile-layer>
       <l-geo-json
         v-if="geoJsonData"
