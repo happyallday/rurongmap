@@ -1,10 +1,27 @@
 <template>
   <div id="app">
     <h1>长沙市芙蓉区地图编辑器</h1>
+    <MapEditor 
+      :geo-json-data="geoJsonData" 
+      @map-click="handleMapClick"
+    />
   </div>
 </template>
 
 <script setup>
+import { ref, onMounted } from 'vue'
+import MapEditor from './components/MapEditor.vue'
+import geoJson from '../public/data/furong-district.json'
+
+const geoJsonData = ref(null)
+
+const handleMapClick = (coords) => {
+  console.log('Map clicked:', coords)
+}
+
+onMounted(() => {
+  geoJsonData.value = geoJson
+})
 </script>
 
 <style>
