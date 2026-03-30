@@ -21,6 +21,7 @@
       @map-click="handleMapClick"
       @select-company="handleSelectCompany"
     />
+    <HelpPanel />
     <StatisticsPanel
       :company-count="companyCount"
       :talent-count="talentCount"
@@ -44,6 +45,7 @@
 <script setup>
 import { ref, onMounted } from 'vue'
 import MapEditor from './components/MapEditor.vue'
+import HelpPanel from './components/HelpPanel.vue'
 import StatisticsPanel from './components/StatisticsPanel.vue'
 import CompanyDialog from './components/CompanyDialog.vue'
 import { useCompanyData } from './composables/useCompanyData'
