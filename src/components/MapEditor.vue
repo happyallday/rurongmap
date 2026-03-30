@@ -24,6 +24,24 @@
         :lat-lng="[company.lat, company.lng]"
         @click="handleMarkerClick(company)"
       >
+        <l-tooltip>
+          <div class="company-tooltip">
+            <h4>{{ company.name }}</h4>
+            <p v-if="company.industry">行业: {{ company.industry }}</p>
+            <p v-if="company.phone">电话: {{ company.phone }}</p>
+            <p v-if="company.address">地址: {{ company.address }}</p>
+            <div v-if="company.talents && company.talents.length > 0" class="talents-info">
+              <p class="talents-title">人才列表:</p>
+              <ul>
+                <li v-for="talent in company.talents" :key="talent.id">
+                  {{ talent.name }} - {{ talent.position }}
+                  <span v-if="talent.phone">({{ talent.phone }})</span>
+                </li>
+              </ul>
+            </div>
+            <p v-else class="no-talents">暂无人才信息</p>
+          </div>
+        </l-tooltip>
         <l-popup>
           <div class="company-popup">
             <h4>{{ company.name }}</h4>
@@ -39,7 +57,7 @@
 
 <script setup>
 import { ref, onMounted } from 'vue'
-import { LMap, LTileLayer, LGeoJson, LMarker, LPopup } from '@vue-leaflet/vue-leaflet'
+import { LMap, LTileLayer, LGeoJson, LMarker, LPopup, LTooltip } from '@vue-leaflet/vue-leaflet'
 
 const props = defineProps({
   geoJsonData: {
@@ -100,5 +118,51 @@ onMounted(() => {
   margin: 4px 0;
   font-size: 14px;
   color: #666;
+}
+
+.company-tooltip {
+  min-width: 180px;
+}
+
+.company-tooltip h4 {
+  margin: 0 0 8px 0;
+  color: #333;
+  font-size: 14px;
+  border-bottom: 1px solid #eee;
+  padding-bottom: 6px;
+}
+
+.company-tooltip p {
+  margin: 4px 0;
+  font-size: 12px;
+  color: #666;
+}
+
+.company-tooltip .talents-info {
+  margin-top: 8px;
+  padding-top: 8px;
+  border-top: 1px solid #eee;
+}
+
+.company-tooltip .talents-title {
+  font-weight: 500;
+  color: #333;
+  margin-bottom: 4px;
+}
+
+.company-tooltip ul {
+  margin: 0;
+  padding-left: 16px;
+  font-size: 11px;
+  color: #666;
+}
+
+.company-tooltip li {
+  margin: 3px 0;
+}
+
+.company-tooltip .no-talents {
+  color: #999;
+  font-style: italic;
 }
 </style>
