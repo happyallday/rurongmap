@@ -19,13 +19,20 @@
     },
     {
       "id": "3721587a-ddec-4f3e-ab62-309246b6239d",
-      "name": "新公司",
+      "name": "吃饭公司",
       "lat": 28.200801003857595,
       "lng": 113.08485031127931,
       "address": "",
-      "industry": "",
+      "industry": "其他",
       "phone": "",
-      "talents": []
+      "talents": [
+        {
+          "name": "周斌",
+          "position": "",
+          "phone": "",
+          "id": "c91609cf-030d-4d95-93b7-edda64254bad"
+        }
+      ]
     },
     {
       "id": "05e65e16-a5d3-42fb-8b66-a34fb63c3452",
@@ -41,6 +48,23 @@
           "position": "",
           "phone": "",
           "id": "0082a383-8b71-4baa-bbe0-2c8f3673c832"
+        }
+      ]
+    },
+    {
+      "id": "6626ea99-0e55-4ed3-9d24-0ee5c0f8d707",
+      "name": "洗脚城",
+      "lat": 28.212298017096376,
+      "lng": 113.02030563354494,
+      "address": "晚报",
+      "industry": "服务",
+      "phone": "",
+      "talents": [
+        {
+          "name": "陈卓",
+          "position": "",
+          "phone": "",
+          "id": "bc329a40-fae1-4e99-9cbc-1b75de5ec797"
         }
       ]
     }
