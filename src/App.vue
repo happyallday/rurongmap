@@ -3,7 +3,17 @@
     <h1>长沙市芙蓉区地图编辑器</h1>
     <div class="toolbar">
       <span>公司: {{ companyCount }} | 人才: {{ talentCount }}</span>
-      <button class="export-btn" @click="handleExport">导出数据</button>
+      <div class="toolbar-actions">
+        <button class="import-btn" @click="triggerImport">导入数据</button>
+        <button class="export-btn" @click="handleExport">导出数据</button>
+        <input 
+          type="file" 
+          ref="fileInput" 
+          accept=".json" 
+          style="display: none" 
+          @change="handleImport"
+        />
+      </div>
     </div>
     <MapEditor 
       :geo-json-data="geoJsonData" 
@@ -39,11 +49,12 @@ import CompanyDialog from './components/CompanyDialog.vue'
 import { useCompanyData } from './composables/useCompanyData'
 import geoJson from '../public/data/furong-district.json'
 
-const { companies, addCompany, updateCompany, deleteCompany, addTalent, updateTalent, deleteTalent, companyCount, talentCount, industryStats, exportData } = useCompanyData()
+const { companies, addCompany, updateCompany, deleteCompany, addTalent, updateTalent, deleteTalent, companyCount, talentCount, industryStats, exportData, importData } = useCompanyData()
 
 const geoJsonData = ref(null)
 const showDialog = ref(false)
 const currentCompany = ref(null)
+const fileInput = ref(null)
 
 const handleMapClick = (coords) => {
   const newCompany = addCompany(coords)
@@ -89,6 +100,27 @@ const handleExport = () => {
   URL.revokeObjectURL(url)
 }
 
+const triggerImport = () => {
+  fileInput.value.click()
+}
+
+const handleImport = (event) => {
+  const file = event.target.files[0]
+  if (!file) return
+  
+  const reader = new FileReader()
+  reader.onload = (e) => {
+    const success = importData(e.target.result)
+    if (success) {
+      alert('数据导入成功！')
+    } else {
+      alert('数据导入失败，请检查文件格式！')
+    }
+  }
+  reader.readAsText(file)
+  event.target.value = ''
+}
+
 onMounted(() => {
   geoJsonData.value = geoJson
 })
@@ -123,6 +155,21 @@ h1 {
   display: flex;
   justify-content: space-between;
   align-items: center;
+}
+
+.toolbar-actions {
+  display: flex;
+  gap: 8px;
+}
+
+.import-btn {
+  padding: 6px 16px;
+  background: #faad14;
+  color: #fff;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 13px;
 }
 
 .export-btn {

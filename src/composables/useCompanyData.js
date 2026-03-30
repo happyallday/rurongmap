@@ -1,8 +1,31 @@
-import { ref, computed } from 'vue'
+import { ref, computed, watch } from 'vue'
 import { v4 as uuidv4 } from 'uuid'
+
+const STORAGE_KEY = 'furong-map-data'
 
 const companies = ref([])
 const selectedCompany = ref(null)
+
+const saveToStorage = () => {
+  try {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(companies.value))
+  } catch (e) {
+    console.error('Failed to save data:', e)
+  }
+}
+
+const loadFromStorage = () => {
+  try {
+    const data = localStorage.getItem(STORAGE_KEY)
+    if (data) {
+      companies.value = JSON.parse(data)
+    }
+  } catch (e) {
+    console.error('Failed to load data:', e)
+  }
+}
+
+loadFromStorage()
 
 export function useCompanyData() {
   const addCompany = (coords) => {
@@ -17,6 +40,7 @@ export function useCompanyData() {
       talents: []
     }
     companies.value.push(newCompany)
+    saveToStorage()
     return newCompany
   }
 
@@ -24,6 +48,7 @@ export function useCompanyData() {
     const index = companies.value.findIndex(c => c.id === id)
     if (index !== -1) {
       companies.value[index] = { ...companies.value[index], ...data }
+      saveToStorage()
     }
   }
 
@@ -31,6 +56,7 @@ export function useCompanyData() {
     const index = companies.value.findIndex(c => c.id === id)
     if (index !== -1) {
       companies.value.splice(index, 1)
+      saveToStorage()
     }
   }
 
@@ -43,6 +69,7 @@ export function useCompanyData() {
         position: talent.position || '',
         phone: talent.phone || ''
       })
+      saveToStorage()
     }
   }
 
@@ -52,6 +79,7 @@ export function useCompanyData() {
       const talentIndex = company.talents.findIndex(t => t.id === talentId)
       if (talentIndex !== -1) {
         company.talents[talentIndex] = { ...company.talents[talentIndex], ...data }
+        saveToStorage()
       }
     }
   }
@@ -62,6 +90,7 @@ export function useCompanyData() {
       const index = company.talents.findIndex(t => t.id === talentId)
       if (index !== -1) {
         company.talents.splice(index, 1)
+        saveToStorage()
       }
     }
   }
@@ -88,12 +117,33 @@ export function useCompanyData() {
 
   const loadData = (data) => {
     companies.value = data.companies || []
+    saveToStorage()
   }
 
   const exportData = () => {
     return {
       companies: companies.value
     }
+  }
+
+  const importData = (jsonData) => {
+    try {
+      const data = typeof jsonData === 'string' ? JSON.parse(jsonData) : jsonData
+      if (data.companies && Array.isArray(data.companies)) {
+        companies.value = data.companies
+        saveToStorage()
+        return true
+      }
+      return false
+    } catch (e) {
+      console.error('Failed to import data:', e)
+      return false
+    }
+  }
+
+  const clearData = () => {
+    companies.value = []
+    saveToStorage()
   }
 
   return {
@@ -109,6 +159,8 @@ export function useCompanyData() {
     talentCount,
     industryStats,
     loadData,
-    exportData
+    exportData,
+    importData,
+    clearData
   }
 }
