@@ -10,25 +10,48 @@
       @map-click="handleMapClick"
       @select-company="handleSelectCompany"
     />
+    <CompanyDialog
+      :visible="showDialog"
+      :company="currentCompany"
+      @close="showDialog = false"
+      @save="handleSaveCompany"
+      @delete="handleDeleteCompany"
+    />
   </div>
 </template>
 
 <script setup>
 import { ref, onMounted } from 'vue'
 import MapEditor from './components/MapEditor.vue'
+import CompanyDialog from './components/CompanyDialog.vue'
 import { useCompanyData } from './composables/useCompanyData'
 import geoJson from '../public/data/furong-district.json'
 
-const { companies, addCompany, companyCount, talentCount } = useCompanyData()
+const { companies, addCompany, updateCompany, deleteCompany, companyCount, talentCount } = useCompanyData()
 
 const geoJsonData = ref(null)
+const showDialog = ref(false)
+const currentCompany = ref(null)
 
 const handleMapClick = (coords) => {
-  addCompany(coords)
+  const newCompany = addCompany(coords)
+  currentCompany.value = newCompany
+  showDialog.value = true
 }
 
 const handleSelectCompany = (company) => {
-  console.log('Selected company:', company)
+  currentCompany.value = company
+  showDialog.value = true
+}
+
+const handleSaveCompany = (data) => {
+  updateCompany(data.id, data)
+  showDialog.value = false
+}
+
+const handleDeleteCompany = (id) => {
+  deleteCompany(id)
+  showDialog.value = false
 }
 
 onMounted(() => {
