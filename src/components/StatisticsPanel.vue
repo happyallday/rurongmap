@@ -107,11 +107,12 @@ const togglePanel = () => {
   background: #fff;
   border-radius: 8px;
   box-shadow: 0 2px 12px rgba(0, 0, 0, 0.15);
-  z-index: 100;
+  z-index: 1000;
   max-height: calc(100vh - 120px);
   overflow: hidden;
   display: flex;
   flex-direction: column;
+  pointer-events: auto;
 }
 
 .statistics-panel.collapsed {

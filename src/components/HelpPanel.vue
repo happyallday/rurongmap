@@ -19,7 +19,7 @@
 <script setup>
 import { ref } from 'vue'
 
-const isCollapsed = ref(true)
+const isCollapsed = ref(false)
 
 const togglePanel = () => {
   isCollapsed.value = !isCollapsed.value
@@ -35,7 +35,8 @@ const togglePanel = () => {
   background: #fff;
   border-radius: 8px;
   box-shadow: 0 2px 12px rgba(0, 0, 0, 0.15);
-  z-index: 100;
+  z-index: 1000;
+  pointer-events: auto;
 }
 
 .help-panel.collapsed {
