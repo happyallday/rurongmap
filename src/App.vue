@@ -16,6 +16,9 @@
       @close="showDialog = false"
       @save="handleSaveCompany"
       @delete="handleDeleteCompany"
+      @add-talent="handleAddTalent"
+      @update-talent="handleUpdateTalent"
+      @delete-talent="handleDeleteTalent"
     />
   </div>
 </template>
@@ -27,7 +30,7 @@ import CompanyDialog from './components/CompanyDialog.vue'
 import { useCompanyData } from './composables/useCompanyData'
 import geoJson from '../public/data/furong-district.json'
 
-const { companies, addCompany, updateCompany, deleteCompany, companyCount, talentCount } = useCompanyData()
+const { companies, addCompany, updateCompany, deleteCompany, addTalent, updateTalent, deleteTalent, companyCount, talentCount } = useCompanyData()
 
 const geoJsonData = ref(null)
 const showDialog = ref(false)
@@ -52,6 +55,18 @@ const handleSaveCompany = (data) => {
 const handleDeleteCompany = (id) => {
   deleteCompany(id)
   showDialog.value = false
+}
+
+const handleAddTalent = (companyId, talent) => {
+  addTalent(companyId, talent)
+}
+
+const handleUpdateTalent = (companyId, talentId, data) => {
+  updateTalent(companyId, talentId, data)
+}
+
+const handleDeleteTalent = (companyId, talentId) => {
+  deleteTalent(companyId, talentId)
 }
 
 onMounted(() => {
